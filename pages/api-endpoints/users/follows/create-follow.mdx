@@ -1,0 +1,100 @@
+# Follow User
+
+## Endpoint
+
+**URL:** `/:projectId/users/:userId/follow`
+
+**Method:** `POST`
+
+**Authentication Required:** Yes
+
+---
+
+## Description
+
+Create a follow relationship between the authenticated user and another user.
+
+---
+
+## Request
+
+### Path Parameters
+
+| Parameter | Type     | Required | Description               |
+| --------- | -------- | -------- | ------------------------- |
+| `userId`  | `string` | Yes      | ID of the user to follow. |
+
+### Headers
+
+| Header          | Type     | Required | Description                      |
+| --------------- | -------- | -------- | -------------------------------- |
+| `Authorization` | `string` | Yes      | Bearer token for authentication. |
+
+### Body Parameters
+
+_None_
+
+#### Example Request
+
+```http
+POST /proj1234/users/abcd123/follow
+Authorization: Bearer <ACCESS_TOKEN>
+```
+
+---
+
+## Response
+
+### Success Response (201 Created)
+
+```
+(No response body)
+```
+
+### Error Responses
+
+#### Self-Follow Attempt (400 Bad Request)
+
+```json
+{
+  "error": "A user cannot follow themselves.",
+  "code": "follow/self-follow"
+}
+```
+
+#### User Not Found (404 Not Found)
+
+```json
+{
+  "error": "One or both users involved in the follow do not exist.",
+  "code": "follow/user-not-found"
+}
+```
+
+#### Already Following (409 Conflict)
+
+```json
+{
+  "error": "Follow relationship already exists.",
+  "code": "follow/already-exists"
+}
+```
+
+#### Server Error (500 Internal Server Error)
+
+```json
+{
+  "error": "Internal server error.",
+  "code": "follow/server-error",
+  "details": "<Error message>"
+}
+```
+
+---
+
+## Notes
+
+- This endpoint creates a `Follow` relationship in the database.
+- A notification of type `new-follow` is triggered after the follow is created.
+- Users cannot follow themselves.
+- Duplicate follow requests are blocked with a 409 status.

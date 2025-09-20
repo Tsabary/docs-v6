@@ -1,0 +1,70 @@
+# `useFetchManyEntities`
+
+## Overview
+
+The `useFetchManyEntities` hook is used to fetch a paginated list of entities from the server based on a wide range of filters and sorting options. This hook provides fine-grained control over the query parameters, allowing for highly customizable entity retrieval.
+
+## Usage Example
+
+```tsx
+import { useFetchManyEntities } from "@replyke/react-js";
+
+function EntitiesList() {
+  const fetchManyEntities = useFetchManyEntities();
+
+  const handleFetchEntities = async () => {
+    try {
+      const entities = await fetchManyEntities({
+        page: 1,
+        limit: 10,
+        followedOnly: true,
+        sortBy: "new",
+        keywordsFilters: { keywords: ["example", "test"] },
+        timeFrame: { from: "2024-01-01", to: "2024-01-31" },
+        locationFilters: { latitude: 40.7128, longitude: -74.0060, radius: 10 },
+        userId: "user123",
+        metadataFilters: { category: "blog" },
+        titleFilters: { contains: "My Title" },
+        contentFilters: { contains: "My Content" },
+        attachmentsFilters: { hasMedia: true },
+      });
+
+      console.log("Fetched entities:", entities);
+    } catch (error) {
+      console.error("Failed to fetch entities:", error.message);
+    }
+  };
+
+  return <button onClick={handleFetchEntities}>Fetch Entities</button>;
+}
+```
+
+## Parameters & Returns
+
+### Parameters
+
+The hook returns a function that accepts an object with the following fields:
+
+| Parameter          | Type                        | Required | Description                                                        |
+|--------------------|-----------------------------|----------|--------------------------------------------------------------------|
+| `page`             | `number`                   | Yes      | The page number to retrieve.                                       |
+| `limit`            | `number`                   | Yes      | The number of entities per page.                                   |
+| `sortBy`           | `FeedSortByOptions \| null` | Yes      | The sorting criteria for the entities (e.g., "new", "top").        |
+| `timeFrame`        | `TimeFrame \| null`         | No       | A time range for filtering entities.                               |
+| `sourceId`           | `string \| null`            | No       | Filter entities by source ID.                        |
+| `userId`           | `string \| null`            | No       | Filter entities created by a specific user.                        |
+| `followedOnly`     | `boolean`                  | Yes      | Whether to fetch entities only from followed users.                |
+| `keywordsFilters`  | `KeywordsFilters \| null`   | No       | Filters for specific keywords associated with the entities.         |
+| `locationFilters`  | `LocationFilters \| null`   | No       | Filters based on geographic location.                              |
+| `metadataFilters`  | `MetadataFilters \| null`   | No       | Filters based on entity metadata.                                  |
+| `titleFilters`     | `TitleFilters \| null`      | No       | Filters based on entity titles.                                    |
+| `contentFilters`   | `ContentFilters \| null`    | No       | Filters based on entity content.                                   |
+| `attachmentsFilters`     | `AttachmentsFilters \| null`      | No       | Filters based on entity attachments presence.              |
+
+### Returns
+
+The function resolves with an array of entities matching the specified filters and criteria:
+
+| Return Value | Type          | Description                              |
+|--------------|---------------|------------------------------------------|
+| `Entity[]`   | `array`       | A list of entities that match the query. |
