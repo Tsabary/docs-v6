@@ -16,6 +16,10 @@ export default {
         title: "Replyke v4 Docs",
         href: "https://v4.docs.replyke.com",
       },
+      _5: {
+        title: "Replyke v5 Docs",
+        href: "https://v5.docs.replyke.com",
+      },
     },
   },
   contact: {
