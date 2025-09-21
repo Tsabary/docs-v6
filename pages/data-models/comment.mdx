@@ -23,7 +23,8 @@ The **Comment** object represents a user-generated comment within Replyke. It su
 | `createdAt`       | `Date`            | Timestamp when the comment was created.                                            |
 | `updatedAt`       | `Date`            | Timestamp when the comment was last updated.                                       |
 | `deletedAt`       | `Date \| null`    | Timestamp when the comment was deleted, if applicable.                             |
-| `parentDeletedAt` | `Date \| null`    | If this is a reply, the timestamp of the parent comment’s deletion, if applicable. |
+| `parentDeletedAt` | `Date \| null`    | If this is a reply, the timestamp of the parent comment's deletion, if applicable. |
+| `metadata`        | `Record<string, any>` | JSON object that could contain any other data about the comment which is relevant (max size: 10KB). |
 
 ---
 

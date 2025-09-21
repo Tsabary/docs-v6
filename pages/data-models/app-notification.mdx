@@ -7,7 +7,6 @@ The **App Notification** object represents an in-app notification sent to users 
 | **Property**  | **Type**                                   | **Description**                                                   |
 |--------------|-------------------------------------------|-----------------------------------------------------------------|
 | `id`        | `string`                                  | Unique identifier (UUID).                   |
-| `projectId`      | `string`                                | UUID identifier of the project.            |
 | `userId`    | `string`                                  | The recipient's user ID.                                         |
 | `type`      | `AppNotificationType`                     | The type of notification (e.g., comment, mention, upvote, etc.). |
 | `isRead`    | `boolean`                                 | Indicates whether the notification has been read.                |
@@ -20,6 +19,7 @@ The **App Notification** object represents an in-app notification sent to users 
 
 | **Type**            | **Action**         | **Description**                                                    |
 |--------------------|------------------|------------------------------------------------------------------|
+| `system`          | `custom`          | System-generated notification with optional button action.        |
 | `entity-comment`  | `open-comment`    | A user commented on an entity.                                   |
 | `comment-reply`   | `open-comment`    | A user replied to a comment.                                     |
 | `entity-mention`  | `open-entity`     | A user was mentioned in an entity.                              |
@@ -30,6 +30,10 @@ The **App Notification** object represents an in-app notification sent to users 
 
 ### Metadata Fields by Notification Type
 
+#### System Notification
+| **Field**           | **Type**                 | **Description**                           |
+|--------------------|------------------------|-------------------------------------------|
+| `buttonData`       | `{ text: string, url: string } \| null` | Optional button with text and URL action. |
 
 #### Entity Comment Notification
 | **Field**           | **Type**                 | **Description**                           |
@@ -103,7 +107,7 @@ The **App Notification** object represents an in-app notification sent to users 
 #### Comment Upvote Notification
 | **Field**           | **Type**                 | **Description**                           |
 |--------------------|------------------------|-------------------------------------------|
-| `entityId`        | `uuid`                | ID of the entity containing the comment. |
+| `entityId`        | `string`                | ID of the entity containing the comment. |
 | `entityShortId`   | `string`                | Shortened ID for sharing. |
 | `entityTitle`     | `string \| null`         | Title of the entity. |
 | `entityContent`   | `string \| null`         | Content of the entity. |

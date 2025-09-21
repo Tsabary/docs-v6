@@ -8,6 +8,7 @@ The **Entity** object represents a core item within Replyke. It can model anythi
 | ---------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | `id`             | `string`                                                   | Unique identifier for the entity (UUID).                                                 |
 | `projectId`      | `string`                                                   | Identifier of the project this entity belongs to (UUID).                                 |
+| `sourceId`       | `string \| null`                                           | Optional source identifier for logical content separation within a project.              |
 | `foreignId`      | `string \| null`                                           | Optional external or static identifier (e.g., `"about-page"`). May not be a UUID.        |
 | `shortId`        | `string`                                                   | Auto-generated unique short identifier used for sharing or routing.                      |
 | `user`           | `UserLean \| null`                                         | Optional lightweight user object representing the creator.                               |

@@ -11,8 +11,8 @@ The **List** object represents a structured, optionally nested collection of ent
 | `userId`     | `string`         | Identifier of the user who created or owns the list (UUID).                   |
 | `parentId`   | `string \| null` | Optional parent list ID (UUID) if this is a nested list.                      |
 | `name`       | `string`         | Human-readable name of the list.                                              |
-| `isRoot`     | `boolean`        | Indicates if this is the root list for the user. Only one root list per user. |
 | `entityIds`  | `string[]`       | Array of entity IDs (UUIDs). Each ID must be unique within the list.          |
+| `entities`   | `Partial<Entity>[]` | Array of partial entity objects corresponding to entityIds.                 |
 | `createdAt`  | `Date`           | Timestamp when the list was created.                                          |
 | `updatedAt`  | `Date`           | Timestamp when the list was last updated.                                     |
 
@@ -20,9 +20,9 @@ The **List** object represents a structured, optionally nested collection of ent
 
 ### Constraints
 
-* A user can have **only one list** where `isRoot = true`. This is enforced at the DB level.
 * The combination of `projectId`, `parentId`, and `name` must be unique.
 * The `entityIds` array must not contain duplicate values.
+* The `entities` array corresponds to the `entityIds` and contains partial entity data for display purposes.
 
 ---
 
@@ -36,8 +36,11 @@ The **List** object represents a structured, optionally nested collection of ent
   "projectId": "project-xyz",
   "userId": "user-789",
   "name": "Favorite Articles",
-  "isRoot": true,
   "entityIds": ["entity-111", "entity-222"],
+  "entities": [
+    { "id": "entity-111", "title": "Article 1" },
+    { "id": "entity-222", "title": "Article 2" }
+  ],
   "createdAt": "2024-02-14T12:34:56Z",
   "updatedAt": "2024-02-15T14:20:00Z"
 }
@@ -52,8 +55,10 @@ The **List** object represents a structured, optionally nested collection of ent
   "userId": "user-222",
   "parentId": "list-123456",
   "name": "Advanced Topics",
-  "isRoot": false,
   "entityIds": ["entity-333"],
+  "entities": [
+    { "id": "entity-333", "title": "Advanced Topic Article" }
+  ],
   "createdAt": "2024-02-14T13:45:00Z",
   "updatedAt": "2024-02-16T09:10:30Z"
 }
@@ -65,4 +70,4 @@ The **List** object represents a structured, optionally nested collection of ent
 
 * Lists are hierarchical: a list can contain sub-lists via `parentId`.
 * Used for favorites, collections, user-curated content, or tagging functionality.
-* The root list (`isRoot = true`) can act as a user’s primary feed or saved items view.
+* The `entities` array provides denormalized entity data for efficient display without additional API calls.
