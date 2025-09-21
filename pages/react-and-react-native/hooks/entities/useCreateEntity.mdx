@@ -44,7 +44,7 @@ The hook returns a function that accepts an object with the following fields:
 | `sourceId`   | `string`             | No       | An optional free-form source ID to group entities into separate entity "pools". |
 | `title`         | `string`             | No       | The title of the entity. |
 | `content`       | `string`             | No       | The main content of the entity. |
-| `attachments`         | `any[]`              | No       | An array of objects representing attachments (e.g., images, videos, files) associated with the entity, with data about those attachments. |
+| `attachments`         | `Record<string, any>[]` | No       | An array of objects representing attachments (e.g., images, videos, files) associated with the entity, with data about those attachments. |
 | `keywords`      | `string[]`           | No       | An array of keywords to tag the entity. |
 | `mentions`      | `Mention[]`           | No       | An array of user mentions in the entity. |
 | `location`      | `object`             | No       | The geographic location (latitude, longitude) associated with the entity. |

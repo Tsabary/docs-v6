@@ -47,7 +47,7 @@ import { Request, Response } from "express";
 import { validateIncomingHmac } from "./utility-functions";
 
 export default async (req: Request, res: Response) => {
-  const sharedSecret = process.env.REPLYKE_PROJECT_SECRET;
+  const sharedSecret = process.env.REPLYKE_WEBHOOKS_SECRET;
   try {
     // Step 1: Validate the incoming HMAC signature
     validateIncomingHmac(req, sharedSecret!);

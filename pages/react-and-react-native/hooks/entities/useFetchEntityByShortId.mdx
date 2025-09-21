@@ -9,13 +9,13 @@ The `useFetchEntityByShortId` hook is used to retrieve details of a specific ent
 ```tsx
 import { useFetchEntityByShortId } from "@replyke/react-js";
 
-function EntityDetails({ entityId }: { entityId: string }) {
+function EntityDetails({ shortId }: { shortId: string }) {
   const fetchEntityByShortId = useFetchEntityByShortId();
 
   const handleFetchEntity = async () => {
     try {
       const entity = await fetchEntityByShortId({
-        entityId,
+        shortId,
       });
 
       console.log("Fetched entity:", entity);

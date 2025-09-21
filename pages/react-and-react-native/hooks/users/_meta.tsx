@@ -3,8 +3,8 @@ export default {
   useFetchUserByForeignId: "useFetchUserByForeignId",
   useFetchUserFollowersCount: "useFetchUserFollowersCount",
   useFetchUserFollowingCount: "useFetchUserFollowingCount",
-  useFetchMentionSuggestions: "useFetchMentionSuggestions",
+  useFetchUserSuggestions: "useFetchUserSuggestions",
+  useMentions: "useMentions",
   useCheckUsernameAvailability: "useCheckUsernameAvailability",
   useUpdateUser: "useUpdateUser",
-  useUserData: "useUserData",
 };

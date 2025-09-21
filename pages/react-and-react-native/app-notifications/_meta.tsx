@@ -1,6 +1,6 @@
 export default {
-  "provider-and-hook":
-    "App Notifications Provider and useAppNotifications Hook",
+  overview: "Overview",
+  hook: "useAppNotifications Hook",
   "notification-templates": "Notification Templates",
   "webhook-integration": "Webhook Integration",
 };

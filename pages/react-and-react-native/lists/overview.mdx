@@ -3,11 +3,13 @@
 
 The **Lists** functionality in Replyke is designed to empower users with a powerful and flexible system for bookmarking and organizing content they wish to revisit later. By allowing users to create curated collections of entities, lists provide a structured way to save and categorize items of interest, enhancing user experience and engagement.
 
+Lists are managed through a Redux-based architecture that provides efficient state management and automatic synchronization across your application, requiring no additional provider setup.
+
 #### Key Concepts:
 
 1.  **Default Root List**: Every user starts with a default root list, providing a ready-to-use space for saving content.
     
-> **Note:**  Developers have the flexibility to customize this behavior. If a root list is not desired, it can be omitted. Through the user interface, developers can enforce the creation of sublists, ensuring all bookmarks are organized within custom lists rather than a default root list.
+> **Note:**  Developers have the flexibility to customize this behavior on the UI, and enforce users to create sublists, ensuring all bookmarks are organized within custom lists rather than a default root list.
 2.  **Unlimited Lists**: Users are not limited to a single list. They can create as many lists as they need, tailoring them to specific topics or purposes.
     
 3.  **Nested Sublists**: For advanced organization, users can nest lists, creating sublists under broader categories.

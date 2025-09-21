@@ -1,3 +1,5 @@
 export default {
-  "provider-and-hook": "Lists Provider and useLists Hook",
+  overview: "Overview",
+  hook: "useLists Hook",
+  useIsEntitySaved: "useIsEntitySaved Hook",
 };

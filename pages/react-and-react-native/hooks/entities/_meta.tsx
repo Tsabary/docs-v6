@@ -3,7 +3,6 @@ export default {
   useFetchEntity: "useFetchEntity",
   useFetchEntityByForeignId: "useFetchEntityByForeignId",
   useFetchEntityByShortId: "useFetchEntityByShortId",
-  useFetchManyEntities: "useFetchManyEntities",
   useUpdateEntity: "useUpdateEntity",
   useEntityVotes: "useEntityVotes",
   useUpvoteEntity: "useUpvoteEntity",
@@ -12,7 +11,5 @@ export default {
   useRemoveEntityDownvote: "useRemoveEntityDownvote",
   useIncrementEntityViews: "useIncrementEntityViews",
   useDeleteEntity: "useDeleteEntity",
-  useInfusedData: "useInfusedData",
   useEntityData: "useEntityData",
-  useEntityListData: "useEntityListData",
 };
