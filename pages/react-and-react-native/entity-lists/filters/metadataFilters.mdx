@@ -5,7 +5,7 @@ The **Metadata Filters** in Replyke allow developers to filter entities based on
 
 #### **Overview of Metadata Filters**
 
-The `metadataFilters` property can be passed into the `EntityListProvider` as an object with the following structure:
+The `metadataFilters` property can be passed to the `fetchEntities` function as part of the filters object with the following structure:
 
 ```typescript
 export interface MetadataFilters {
@@ -21,18 +21,24 @@ export interface MetadataFilters {
 -   **`exists`**: An array of keys that must exist in the entity's `metadata`, regardless of their value.
 -   **`doesNotExist`**: An array of keys that must not exist in the entity's `metadata`.
 
-#### **Dynamically Updating Metadata Filters**
+#### **Applying Metadata Filters**
 
-Developers can dynamically update the metadata filters using the `setMetadataFilters` function provided by the `useEntityList` hook. This function expects a new `metadataFilters` object or `null` to clear the filters.
+Developers can apply metadata filters by calling the `fetchEntities` function with the desired filter configuration.
 
 ```tsx
-const { setMetadataFilters } = useEntityList();
+const entityList = useEntityList({ listId: "filtered-feed" });
 
-// Set a filter to include entities with specific metadata
-setMetadataFilters({ includes: { category: "tech", featured: true } });
+// Apply metadata filters
+entityList.fetchEntities({
+  sortBy: "hot",
+  metadataFilters: { includes: { category: "tech", featured: true } }
+});
 
 // Reset metadata filters
-setMetadataFilters(null);
+entityList.fetchEntities({
+  sortBy: "hot",
+  metadataFilters: null
+});
 ```
 
 #### **How Metadata Filters Work**
@@ -49,41 +55,25 @@ Metadata Filters allow for complex queries that include:
 
 #### **Example Use Cases**
 
-##### **1. Passing Static Filters to the EntityListProvider**
-
-To set static metadata filters at the entity list's initialization, pass them directly to the `EntityListProvider`:
+Developers can allow users to refine the entity list dynamically using the `fetchEntities` function:
 
 ```tsx
-<EntityListProvider
-  metadataFilters={{
-    includes: { category: "tech", featured: true },
-    doesNotInclude: { deprecated: true },
-    exists: ["author"],
-    doesNotExist: ["archived"],
-  }}
->
-  <MyFeedComponent />
-</EntityListProvider>
-```
-
-This setup ensures that the entity list includes:
-
--   Entities where `metadata.category` is "tech" and `metadata.featured` is `true`.
--   Entities where `metadata.deprecated` is not `true`.
--   Entities with a `metadata.author` key.
--   Entities without a `metadata.archived` key.
-
-##### **2. Dynamically Updating Filters Based on User Interaction**
-
-Developers can allow users to refine the entity list dynamically using the `setMetadataFilters` function:
-
-```tsx
-const { setMetadataFilters, entities, loadMore } = useEntityList();
+const entityList = useEntityList({ listId: "filtered-feed" });
 
 const applyFilters = () => {
-  setMetadataFilters({
-    includes: { category: "tech" },
-    exists: ["author"],
+  entityList.fetchEntities({
+    sortBy: "hot",
+    metadataFilters: {
+      includes: { category: "tech" },
+      exists: ["author"],
+    }
+  });
+};
+
+const clearFilters = () => {
+  entityList.fetchEntities({
+    sortBy: "hot",
+    metadataFilters: null
   });
 };
 
@@ -91,16 +81,16 @@ return (
   <div>
     <h1>Filtered Entity List</h1>
     <button onClick={applyFilters}>Apply Tech Filters</button>
-    <button onClick={() => setMetadataFilters(null)}>Clear Filters</button>
+    <button onClick={clearFilters}>Clear Filters</button>
     <ul>
-      {entities.map((entity) => (
+      {entityList.entities.map((entity) => (
         <li key={entity.id}>
           <h2>{entity.title}</h2>
           <p>Metadata: {JSON.stringify(entity.metadata)}</p>
         </li>
       ))}
     </ul>
-    <button onClick={loadMore}>Load More</button>
+    <button onClick={entityList.loadMore}>Load More</button>
   </div>
 );
 ```
@@ -111,7 +101,7 @@ In this example, clicking the "Apply Tech Filters" button updates the entity lis
 
 -   Metadata Filters are powerful for working with unstructured data, allowing highly customized entity lists.
 -   Filters are applied immediately, and the entity list resets to reflect the updated conditions.
--   Passing `null` to `setMetadataFilters` clears all metadata-based filtering.
+-   Passing `null` to `metadataFilters` in `fetchEntities` clears all metadata-based filtering.
 
 #### **Conclusion**
 

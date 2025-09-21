@@ -1,6 +1,6 @@
 export default {
-  provider: "Entity List Provider",
-  hook: "useEntityList Hook",
-  infuseData: "infuseData",
+  overview: "Overview",
+  fetchEntities: "fetchEntities API",
+  infuseData: "External Data Integration",
   filters: "Filters",
 };

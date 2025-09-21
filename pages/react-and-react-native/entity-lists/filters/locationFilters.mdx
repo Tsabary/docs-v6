@@ -14,49 +14,42 @@ interface LocationFilters {
 }
 ```
 
-This object can be provided directly to the `EntityListProvider` component to apply static location filtering during initialization. To dynamically adjust the location filters after initialization, the `useEntityList` hook provides the `setLocationFilters` method.
+This object can be provided to the `fetchEntities` function to apply location filtering. To dynamically adjust the location filters, call `fetchEntities` with the desired location configuration.
 
 ```typescript
-setLocationFilters: (location: LocationFilters | null) => void;
+entityList.fetchEntities({
+  sortBy: "hot",
+  locationFilters: { latitude: 37.7749, longitude: -122.4194, radius: 5000 }
+});
 ```
 
 - Setting the filters to `null` removes the location-based filtering.
-- Providing valid `latitude`, `longitude`, and `radius` values updates the filter dynamically.
+- Providing valid `latitude`, `longitude`, and `radius` values applies the filter.
 
 #### Example Usage
 
-##### Static Location Filters
-To initialize the entity list with location filters:
-
-```tsx
-const locationFilters = {
-  latitude: 37.7749,
-  longitude: -122.4194,
-  radius: 5000, // 5 km
-};
-
-<EntityListProvider locationFilters={locationFilters}>
-  {/* Your content feed here */}
-</EntityListProvider>;
-```
-
-##### Dynamic Location Filters
-To change the location filter dynamically, use the `useEntityList` hook:
+To change the location filter dynamically, use the `fetchEntities` function:
 
 ```tsx
 const MyComponent = () => {
-  const { setLocationFilters } = useEntityList();
+  const entityList = useEntityList({ listId: "filtered-feed" });
 
   const updateLocation = () => {
-    setLocationFilters({
-      latitude: 40.7128,
-      longitude: -74.0060,
-      radius: 10000, // 10 km
+    entityList.fetchEntities({
+      sortBy: "hot",
+      locationFilters: {
+        latitude: 40.7128,
+        longitude: -74.0060,
+        radius: 10000, // 10 km
+      }
     });
   };
 
   const clearLocation = () => {
-    setLocationFilters(null); // Removes location filters
+    entityList.fetchEntities({
+      sortBy: "hot",
+      locationFilters: null
+    }); // Removes location filters
   };
 
   return (
@@ -71,8 +64,8 @@ const MyComponent = () => {
 #### Notes
 1. **Precision**: Ensure the latitude and longitude values are precise enough for the desired filtering. Slight inaccuracies in coordinates may result in unexpected results.
 2. **Radius Limitations**: The radius value determines the size of the filtering area in meters. Be mindful of performance implications when using very large radii.
-3. **No Location Filter**: If `setLocationFilters` is set to `null`, the system will ignore location as a filtering criterion when fetching entities.
+3. **No Location Filter**: If `locationFilters` is set to `null` in `fetchEntities`, the system will ignore location as a filtering criterion when fetching entities.
 
 #### Conclusion
-Location Filters provide a powerful way to enhance entity lists' relevance by focusing on geographic proximity. Whether used statically during initialization or dynamically via the `useEntityList` hook, this feature enables users to tailor their content feeds for a highly localized experience. Combine it with other filters like Keywords or Title Filters for even more precise content curation.
+Location Filters provide a powerful way to enhance entity lists' relevance by focusing on geographic proximity. Whether used statically during initialization or dynamically via the `fetchEntities` function, this feature enables users to tailor their content feeds for a highly localized experience. Combine it with other filters like Keywords or Title Filters for even more precise content curation.
 

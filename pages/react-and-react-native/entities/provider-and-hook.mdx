@@ -24,7 +24,7 @@ The `EntityProvider` expects at least one of the following properties. None are 
 
 ### Optional Flag: createIfNotFound
 
-The `createIfNotFound` flag instructs Replyke to create an entity if one isn't found. This flag is relevant for integration with existing datasets or static apps. When used, this flag will only cause the creation of an entity once per item or entity. Subsequent requests will locate the previously created entity.
+The `createIfNotFound` flag instructs Replyke to create an entity if one isn't found. This flag is relevant for integration with existing datasets or for generating entities dynamically for static content. When used, this flag will only cause the creation of an entity once per item or entity. Subsequent requests will simply locate the previously created entity.
 
 ### Accessing the Entity Context
 

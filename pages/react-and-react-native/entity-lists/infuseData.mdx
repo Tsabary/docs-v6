@@ -1,97 +1,181 @@
+# External Data Integration (infuseData)
 
-### The `infuseData` Callback
+The `infuseData` callback allows you to merge external data with entities fetched by Replyke. This is useful when your entities need additional information from external APIs or databases.
 
-#### **The Challenge**
+## How It Works
 
-When Replyke fetches data for a list, it retrieves only the information it manages internally. While this is sufficient for many applications, there are cases where entities need additional external data to be meaningful.
+When you provide an `infuseData` function to `useEntityList`, it:
 
-For example: A product entity might need inventory details from an external inventory management system.
+1. Receives the `foreignId` of each entity
+2. Fetches additional data from your external source
+3. Adds the external data under an `infusion` property
+4. Returns the combined data in the `infusedEntities` array
 
-Without a mechanism to merge external data into Replyke’s entities, developers are left with incomplete data objects, limiting the application’s functionality and user experience.
+The original `entities` array remains unchanged, containing only Replyke's data. External data is safely nested under the `infusion` property to prevent key conflicts.
 
-#### **The Solution**
-
-The `infuseData` callback provides a seamless way to integrate external data into entities fetched by Replyke. This function is passed to the `EntityListProvider` and is invoked for each entity in the list. The `infuseData` function:
-
-1.  Receives a `foreignId` for each entity.
-2.  Fetches additional data for that entity from an external source (e.g., another database or API).
-3.  Merges the fetched data with the entity, creating a complete data object that includes both Replyke-managed and externally sourced information.
-
-This approach ensures that developers can leverage Replyke’s powerful list capabilities while maintaining access to essential external data.
-
-#### **How It Works**
-
-Internally, the `useInfusedData` hook handles the logic for merging data. For each entity:
-
--   It checks if the external data for the entity is already cached to avoid redundant fetches.
--   If not, it uses the provided `infuseData` function to fetch the required data.
--   The fetched data is then merged with the entity, and the complete object is returned in the `infusedEntities` array.
-
-The `entities` array remains "pure," containing only the data fetched by Replyke. The `infusedEntities` array provides the enriched versions of these entities.
-
-#### **Example**
-
-Here is a practical example of how to use the `infuseData` callback:
+## Usage
 
 ```typescript
-import React from 'react';
-import { EntityListProvider, useEntityList } from 'replyke';
-
-const fetchInventoryData = async (foreignId: string) => {
-  try {
-    const response = await fetch(`/api/inventory/${foreignId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch inventory data');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(`Error fetching inventory data for ${foreignId}:`, error);
-    return null;
-  }
-};
+import { useEntityList } from "@replyke/core";
 
 const ProductFeed = () => {
-  const {
-    infusedEntities,
-    loadMore,
-    resetEntities,
-    loading,
-    hasMore,
-  } = useEntityList();
+  const entityList = useEntityList({
+    listId: "product-feed",
+    infuseData: async (foreignId) => {
+      try {
+        const response = await fetch(`/api/inventory/${foreignId}`);
+        return response.ok ? await response.json() : null;
+      } catch (error) {
+        console.error(`Failed to fetch inventory for ${foreignId}:`, error);
+        return null;
+      }
+    }
+  });
+
+  useEffect(() => {
+    entityList.fetchEntities(
+      { sortBy: "hot" },
+      { sourceId: "products", limit: 20 }
+    );
+  }, []);
 
   return (
     <div>
-      <h1>Product Feed</h1>
-      <ul>
-        {infusedEntities.map((entity) => (
-          <li key={entity.foreignId}>
-            <h2>{entity.title}</h2>
-            <p>Stock: {entity.infusion.stock}</p>
-            <p>Price: ${entity.infusion.price}</p>
-          </li>
-        ))}
-      </ul>
-      {loading && <p>Loading...</p>}
-      {hasMore && <button onClick={loadMore}>Load More</button>}
-      <button onClick={resetEntities}>Refresh Feed</button>
+      {entityList.infusedEntities.map((entity) => (
+        <div key={entity.id}>
+          <h2>{entity.title}</h2>
+          <p>{entity.content}</p>
+          {/* External data is under the 'infusion' property */}
+          <p>Stock: {entity.infusion?.stock}</p>
+          <p>Price: ${entity.infusion?.price}</p>
+        </div>
+      ))}
     </div>
   );
 };
-
-const App = () => (
-  <EntityListProvider infuseData={fetchInventoryData}>
-    <ProductFeed />
-  </EntityListProvider>
-);
-
-export default App;
-
 ```
 
-#### **Key Takeaways**
+## Performance
 
--   The `infuseData` callback bridges the gap between Replyke’s list data and your application’s external data requirements.
--   It ensures that entities can be enriched with external data dynamically.
--   The process is efficient, leveraging caching to minimize redundant fetches.
+- Data is fetched once per entity and cached
+- Failed fetches return `null` and don't block other entities
+- The `infuseData` function is called automatically when new entities are loaded
 
-This feature empowers developers to create rich, data-complete applications while maintaining the flexibility and power of Replyke entity lists.
+## Use Cases
+
+### Product Inventory
+```typescript
+const infuseInventoryData = async (foreignId) => {
+  const inventory = await fetch(`/api/inventory/${foreignId}`);
+  return inventory.json(); // { stock: 25, price: 49.99, warehouse: "NYC" }
+};
+```
+
+### User Profiles
+```typescript
+const infuseUserData = async (foreignId) => {
+  const profile = await fetch(`/api/users/${foreignId}`);
+  return profile.json(); // { avatar: "...", verified: true, followers: 1250 }
+};
+```
+
+### Analytics Data
+```typescript
+const infuseAnalytics = async (foreignId) => {
+  const stats = await fetch(`/api/analytics/${foreignId}`);
+  return stats.json(); // { views: 5420, engagement: 0.12, trending: true }
+};
+```
+
+## Error Handling
+
+The `infuseData` function should handle errors gracefully:
+
+```typescript
+const infuseData = async (foreignId) => {
+  try {
+    const response = await fetch(`/api/external/${foreignId}`);
+
+    if (!response.ok) {
+      console.warn(`External data not found for ${foreignId}`);
+      return null;
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Failed to fetch external data for ${foreignId}:`, error);
+    return null; // Return null on error, don't throw
+  }
+};
+```
+
+## Data Structure
+
+External data is safely nested under the `infusion` property to prevent conflicts with Replyke's entity properties:
+
+```typescript
+// Original entity from Replyke
+const entity = {
+  id: "123",
+  foreignId: "product-456",
+  title: "Amazing Widget",
+  content: "A great product...",
+  // ... other Replyke fields
+};
+
+// External data returned by infuseData
+const externalData = {
+  stock: 25,
+  price: 49.99,
+  warehouse: "NYC"
+};
+
+// Final result in infusedEntities
+const infusedEntity = {
+  id: "123",
+  foreignId: "product-456",
+  title: "Amazing Widget",
+  content: "A great product...",
+  // External data safely nested under 'infusion'
+  infusion: {
+    stock: 25,
+    price: 49.99,
+    warehouse: "NYC"
+  }
+};
+```
+
+## Accessing Infused Data
+
+Always access external data through the `infusion` property:
+
+```typescript
+// ✅ Correct - access via infusion property
+entity.infusion?.stock
+entity.infusion?.price
+entity.infusion?.warehouse
+
+// ❌ Wrong - external data is not merged at root level
+entity.stock // undefined
+entity.price // undefined
+```
+
+## Handling Missing Data
+
+Since external data fetching can fail, always use optional chaining:
+
+```typescript
+{entityList.infusedEntities.map(entity => (
+  <div key={entity.id}>
+    <h2>{entity.title}</h2>
+    {entity.infusion ? (
+      <div>
+        <p>Stock: {entity.infusion.stock}</p>
+        <p>Price: ${entity.infusion.price}</p>
+      </div>
+    ) : (
+      <p>External data unavailable</p>
+    )}
+  </div>
+))}
+```

@@ -5,7 +5,7 @@ The **Attachments Filters** in Replyke allows developers to filter entities base
 
 #### Overview of Attachments Filters
 
-The `attachmentsFilters` property can be passed into the `EntityListProvider` as an object with the following structure:
+The `attachmentsFilters` property can be passed to the `fetchEntities` function as part of the filters object with the following structure:
 
 ```typescript
 export interface AttachmentsFilters {
@@ -15,18 +15,24 @@ export interface AttachmentsFilters {
 
 -   **`hasAttachments`**: A boolean flag to include or exclude entities based on whether they contain attachments (`true`) or not (`false`).
 
-#### Dynamically Updating Attachments Filters
+#### Applying Attachments Filters
 
-Developers can dynamically update the attachments filters using the `setAttachmentsFilters` function provided by the `useEntityList` hook. This function expects a new `attachmentsFilters` object or `null` to clear the filters.
+Developers can apply attachments filters by calling the `fetchEntities` function with the desired filter configuration.
 
 ```tsx
-const { setAttachmentsFilters } = useEntityList();
+const entityList = useEntityList({ listId: "filtered-feed" });
 
-// Set a filter to include entities with attachment
-setAttachmentsFilters({ hasAttachments: true });
+// Apply attachments filters
+entityList.fetchEntities({
+  sortBy: "hot",
+  attachmentsFilters: { hasAttachments: true }
+});
 
 // Reset attachment filters
-setAttachmentsFilters(null);
+entityList.fetchEntities({
+  sortBy: "hot",
+  attachmentsFilters: null
+});
 ```
 
 #### How Attachments Filters Work
@@ -56,10 +62,20 @@ This setup ensures that only entities with attachments are included in the entit
 You can also dynamically adjust the attachments filters based on user actions, such as clicking a toggle button:
 
 ```tsx
-const { setAttachmentsFilters, entities, loadMore } = useEntityList();
+const entityList = useEntityList({ listId: "filtered-feed" });
 
 const toggleAttachmentsFilter = (hasAttachments: boolean) => {
-  setAttachmentsFilters({ hasAttachments });
+  entityList.fetchEntities({
+    sortBy: "hot",
+    attachmentsFilters: { hasAttachments }
+  });
+};
+
+const clearFilters = () => {
+  entityList.fetchEntities({
+    sortBy: "hot",
+    attachmentsFilters: null
+  });
 };
 
 return (
@@ -68,17 +84,17 @@ return (
     <div>
       <button onClick={() => toggleAttachmentsFilter(true)}>Show Only With Attachments</button>
       <button onClick={() => toggleAttachmentsFilter(false)}>Show Only Without Attachments</button>
-      <button onClick={() => setAttachmentsFilters(null)}>Clear Attachments Filter</button>
+      <button onClick={clearFilters}>Clear Attachments Filter</button>
     </div>
     <ul>
-      {entities.map((entity) => (
-        <li key={entity.d}>
+      {entityList.entities.map((entity) => (
+        <li key={entity.id}>
           <h2>{entity.title}</h2>
           {entity.attachments.length > 0 ? <p>Attachments included</p> : <p>No attachments</p>}
         </li>
       ))}
     </ul>
-    <button onClick={loadMore}>Load More</button>
+    <button onClick={entityList.loadMore}>Load More</button>
   </div>
 );
 ```
@@ -89,7 +105,7 @@ In this example, clicking the buttons dynamically updates the attachments filter
 
 -   Attachments Filters operate on the presence of attachments content in entities, typically represented by non-empty or empty attachments arrays.
 -   Filters are applied immediately, and the entity list resets to reflect the updated conditions.
--   Passing `null` to `setAttachmentsFilters` clears all attachments-based filtering.
+-   Passing `null` to `attachmentsFilters` in `fetchEntities` clears all attachments-based filtering.
 
 ### Conclusion
 

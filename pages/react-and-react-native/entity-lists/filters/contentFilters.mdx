@@ -5,7 +5,7 @@ The **Content Filters** in Replyke allow developers to filter entities based on 
 
 #### **Overview of Content Filters**
 
-The `contentFilters` property can be passed into the `EntityListProvider` as an object with the following structure:
+The `contentFilters` property can be passed to the `fetchEntities` function as part of the filters object with the following structure:
 
 ```typescript
 export interface ContentFilters {
@@ -19,18 +19,24 @@ export interface ContentFilters {
 -   **`includes`**: A string or array of strings. Entities whose `content` contains any of these strings will be included.
 -   **`doesNotInclude`**: A string or array of strings. Entities whose `content` contains any of these strings will be excluded.
 
-#### **Dynamically Updating Content Filters**
+#### **Applying Content Filters**
 
-Developers can dynamically update the content filters using the `setContentFilters` function provided by the `useEntityList` hook. This function expects a new `contentFilters` object or `null` to clear the filters.
+Developers can apply content filters by calling the `fetchEntities` function with the desired filter configuration.
 
 ```tsx
-const { setContentFilters } = useEntityList();
+const entityList = useEntityList({ listId: "filtered-feed" });
 
-// Set a new content filter
-setContentFilters({ includes: "JavaScript", doesNotInclude: "PHP" });
+// Apply content filters
+entityList.fetchEntities({
+  sortBy: "hot",
+  contentFilters: { includes: "JavaScript", doesNotInclude: "PHP" }
+});
 
 // Reset content filters
-setContentFilters(null);
+entityList.fetchEntities({
+  sortBy: "hot",
+  contentFilters: null
+});
 ```
 
 #### **How Content Filters Work**
@@ -64,10 +70,20 @@ This setup ensures that only entities with content are included, and that conten
 You can also dynamically adjust the content filters based on user actions, such as clicking a button:
 
 ```tsx
-const { setContentFilters, entities, loadMore } = useEntityList();
+const entityList = useEntityList({ listId: "filtered-feed" });
 
 const handleFilterUpdate = (newIncludes: string[], newExcludes: string[]) => {
-  setContentFilters({ includes: newIncludes, doesNotInclude: newExcludes });
+  entityList.fetchEntities({
+    sortBy: "hot",
+    contentFilters: { includes: newIncludes, doesNotInclude: newExcludes }
+  });
+};
+
+const clearFilters = () => {
+  entityList.fetchEntities({
+    sortBy: "hot",
+    contentFilters: null
+  });
 };
 
 return (
@@ -77,17 +93,17 @@ return (
       <button onClick={() => handleFilterUpdate(["JavaScript"], ["PHP"])}>
         Show JavaScript, Exclude PHP
       </button>
-      <button onClick={() => handleFilterUpdate(null)}>Clear Filters</button>
+      <button onClick={clearFilters}>Clear Filters</button>
     </div>
     <ul>
-      {entities.map((entity) => (
+      {entityList.entities.map((entity) => (
         <li key={entity.id}>
           <h2>{entity.title}</h2>
           <p>{entity.content}</p>
         </li>
       ))}
     </ul>
-    <button onClick={loadMore}>Load More</button>
+    <button onClick={entityList.loadMore}>Load More</button>
   </div>
 );
 ```
@@ -98,7 +114,7 @@ In this example, clicking the button updates the content filters dynamically, al
 
 -   Content Filters are case-insensitive, making them flexible for user-defined queries.
 -   Filters are applied immediately, and the feed resets to reflect the updated conditions.
--   Passing `null` to `setContentFilters` clears all content-based filtering.
+-   Passing `null` to `contentFilters` in `fetchEntities` clears all content-based filtering.
 
 #### **Conclusion**
 

@@ -5,7 +5,7 @@ The **Keywords Filters** in Replyke allow developers to filter entities in an en
 
 #### **Overview of Keywords Filters**
 
-The `keywordsFilters` property can be passed to the `EntityListProvider` as an object with the following structure:
+The `keywordsFilters` property can be passed to the `fetchEntities` function as part of the filters object with the following structure:
 
 ```typescript
 export interface KeywordsFilters {
@@ -17,36 +17,26 @@ export interface KeywordsFilters {
 -   **`includes`**: Specifies keywords that must be present in an entity’s keywords array for it to be included in the list.
 -   **`doesNotInclude`**: Specifies keywords that must not be present in an entity’s keywords array for it to be included in the list.
 
-You can dynamically update these filters using the `updateKeywordsFilters` function provided by the `useEntityList` hook.
+You can apply these filters by calling the `fetchEntities` function with the desired filter configuration.
 
-#### **Dynamically Updating Keywords Filters**
+#### **Applying Keywords Filters**
 
-The `updateKeywordsFilters` function allows developers to modify the state of the keywords filters. It provides three actions:
-
-1.  **`add`**: Adds new keywords to the specified filter array (`includes` or `doesNotInclude`).
-2.  **`remove`**: Removes specified keywords from the specified filter array.
-3.  **`reset`**: Resets the specified filter array to its initial state. You can also reset both lists simultaneously.
-4. **`replace`**: Replaces the entire array of keywords with a new set.
-
-> Important**: When calling `updateKeywordsFilters("add", "both", ...)` or `updateKeywordsFilters("replace", "both", ...)`, no action is taken, as adding/replacing across both lists simultaneously is not supported.  
-
-
-Here is an example of how to use `updateKeywordsFilters`:
+Developers can apply keywords filters by calling the `fetchEntities` function with the desired filter configuration.
 
 ```tsx
-const { updateKeywordsFilters } = useEntityList();
+const entityList = useEntityList({ listId: "filtered-feed" });
 
-// Adding a keyword to the includes list
-updateKeywordsFilters("add", "includes", "React");
+// Apply keywords filters
+entityList.fetchEntities({
+  sortBy: "hot",
+  keywordsFilters: { includes: ["React"], doesNotInclude: ["Vue"] }
+});
 
-// Removing a keyword from the doesNotInclude list
-updateKeywordsFilters("remove", "doesNotInclude", "Vue");
-
-// Resetting both lists
-updateKeywordsFilters("reset", "both");
-
-// Replacing the includes array with a new array
-updateKeywordsFilters("replace", "includes", ["Angular"]); 
+// Reset keywords filters
+entityList.fetchEntities({
+  sortBy: "hot",
+  keywordsFilters: null
+});
 ```
 
 #### **How Keywords Filters Work**
@@ -75,13 +65,23 @@ This setup ensures that the list is pre-configured to show only posts about "Jav
 
 ##### **Dynamically Updating Filters Based on User Interaction**
 
-To dynamically change the filters, such as when a user clicks a keyword button, use the `updateKeywordsFilters` function from the `useEntityList` hook:
+To dynamically change the filters, such as when a user clicks a keyword button, use the `fetchEntities` function:
 
 ```tsx
-const { updateKeywordsFilters, entities, loadMore } = useEntityList();
+const entityList = useEntityList({ listId: "filtered-feed" });
 
 const handleKeywordClick = (keyword: string) => {
-  updateKeywordsFilters("add", "includes", keyword);
+  entityList.fetchEntities({
+    sortBy: "hot",
+    keywordsFilters: { includes: [keyword] }
+  });
+};
+
+const excludeKeyword = (keyword: string) => {
+  entityList.fetchEntities({
+    sortBy: "hot",
+    keywordsFilters: { doesNotInclude: [keyword] }
+  });
 };
 
 return (
@@ -90,22 +90,22 @@ return (
     <div>
       <button onClick={() => handleKeywordClick("JavaScript")}>JavaScript</button>
       <button onClick={() => handleKeywordClick("React")}>React</button>
-      <button onClick={() => handleKeywordClick("Angular")}>Exclude Angular</button>
+      <button onClick={() => excludeKeyword("Angular")}>Exclude Angular</button>
     </div>
     <ul>
-      {entities.map((entity) => (
+      {entityList.entities.map((entity) => (
         <li key={entity.id}>
           <h2>{entity.title}</h2>
           <p>{entity.content}</p>
         </li>
       ))}
     </ul>
-    <button onClick={loadMore}>Load More</button>
+    <button onClick={entityList.loadMore}>Load More</button>
   </div>
 );
 ```
 
-In this example, clicking a button dynamically updates the list by adding a keyword to the `includes` filter.
+In this example, clicking a button dynamically updates the entity list by applying keyword filters.
 
 #### **Important Notes**
 

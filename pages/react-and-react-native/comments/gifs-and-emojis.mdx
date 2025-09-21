@@ -1,7 +1,11 @@
 
-### **GIF Integration with GIPHY**
+# GIFs and Emojis
 
-GIFs have become a staple in online communication, adding a layer of expression and fun that plain text simply can’t achieve. With Replyke, integrating GIF support into your app is effortless thanks to our built-in GIPHY integration. Here’s everything you need to know:
+This guide covers GIF and emoji functionality that's available in both social and threaded comment styles.
+
+## **GIF Integration with GIPHY**
+
+GIFs have become a staple in online communication, adding a layer of expression and fun that plain text simply can't achieve. With Replyke, integrating GIF support into your comment systems is effortless thanks to our built-in GIPHY integration. This feature works with both social and threaded comment styles. Here's everything you need to know:
 
 #### **How It Works**
 
@@ -47,18 +51,25 @@ To make it easier and more intuitive for users to add emojis to their comments, 
 
 #### **How It Works**
 
--   The Emoji Suggestions Bar is included **by default** in the `NewCommentForm` component, requiring no additional configuration from developers.
+-   The Emoji Suggestions Bar is included **by default** in the **Social Comments** style only.
 -   Users can simply click on their preferred emoji from the bar to add it directly to their comment.
 
-#### **Disabling the Emoji Bar**
+#### **Availability by Comment Style**
 
-If you’d prefer to disable the Emoji Suggestions Bar for your app, it’s as simple as setting a flag:
+**Social Comments:**
+The emoji suggestions bar is included by default and can be disabled using the `withEmojis` prop:
 
 ```jsx
-<NewCommentForm withEmojis={false} />
+<SocialCommentSection withEmojis={false} />
 ```
 
-With this flag set to `false`, the bar will be hidden, but users can still add emojis using their device’s keyboard.
+**Threaded Comments:**
+The emoji suggestions bar is **not available** in threaded comments. The threaded style focuses on discussion content and uses a simpler comment input approach. Users can still add emojis using their device's keyboard.
+
+**For Custom Implementations:**
+If you're building custom comment sections using the lower-level hooks, the emoji bar functionality is only available when using social comment components.
+
+Regardless of the comment style, users can always add emojis using their device's keyboard.
 
 #### **Why Enable the Emoji Bar?**
 

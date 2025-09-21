@@ -121,7 +121,7 @@ export default async (req: ExReq, res: ExRes) => {
 
     const projectId = process.env.REPLYKE_PROJECT_ID;
     const privateKeyPem = Buffer.from(
-      process.env.REPLYKE_PROJECT_PRIVATE_KEY!,
+      process.env.REPLYKE_JWT_SIGN_PRIVATE_KEY!,
       "base64"
     ).toString("utf-8");
 

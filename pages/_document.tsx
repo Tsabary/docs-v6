@@ -5,15 +5,16 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Load the GA4 library */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-R0WW1RW0XF"
-        />
-        {/* Initialize GA4 */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
+        <>
+          {/* Load the GA4 library */}
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-R0WW1RW0XF"
+          />
+          {/* Initialize GA4 */}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
@@ -21,8 +22,9 @@ export default function Document() {
                 cookie_domain: 'replyke.com'
               });
             `,
-          }}
-        />
+            }}
+          />
+        </>
       </Head>
       <body>
         <Main />
