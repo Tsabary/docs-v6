@@ -3,10 +3,11 @@ export default {
   "integration-options": "Integration Options",
   authentication: "Authentication",
   security: "Security",
-
   "react-and-react-native": "React & React Native",
   "api-endpoints": "API Endpoints",
   "data-models": "Data Models",
+  "NodeJS-SDK": "NodeJS SDK",
+  "JS-SDK": "JS SDK",
   versions: {
     type: "menu",
     title: "Versions",

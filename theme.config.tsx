@@ -95,12 +95,12 @@ const config: DocsThemeConfig = {
     );
   },
   project: {
-    link: "https://github.com/Replyke/docs-v5",
+    link: "https://github.com/Replyke/docs-v6",
   },
   chat: {
     link: "https://discord.com/invite/REKxnCJzPz",
   },
-  docsRepositoryBase: "https://github.com/Replyke/docs-v5",
+  docsRepositoryBase: "https://github.com/Replyke/docs-v6",
   footer: {
     content: `© Replyke ${currentYear}`, // Add the year dynamically here
   },
