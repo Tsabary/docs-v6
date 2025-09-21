@@ -16,7 +16,7 @@ import { useUser, useCreateReport, ReportReasonKey, reportReasons } from "@reply
 
 const ReportPostModal = ({ reportedPost, onClose }) => {
   const { user } = useUser();
-  const { createEntityReport } = useCreateReport();
+  const createEntityReport = useCreateReport({ type: "entity" });
 
   const [submitting, setSubmitting] = useState(false);
   const [reason, setReason] = useState<ReportReasonKey | null>(null);

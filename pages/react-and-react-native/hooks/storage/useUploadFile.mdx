@@ -8,7 +8,7 @@ The `useUploadFile` hook is a versatile utility for uploading files to a server,
 
 ```tsx
 import React, { useState } from "react";
-import useUploadFile from "@replyke/react-js";
+import { useUploadFile } from "@replyke/react-js";
 
 function FileUploader() {
   const uploadFile = useUploadFile();
@@ -67,7 +67,7 @@ The `file` parameter can be one of the following:
 
 ### Returns
 
-The `uploadFile` function returns a promise resolving to an object of type `UploadResponse` or throws an error:
+The `uploadFile` function returns a promise resolving to an object of type `UploadResponse | void`. On successful upload, it returns an `UploadResponse` object:
 
 | Return Value     | Type          | Description                                                                 |
 |------------------|---------------|-----------------------------------------------------------------------------|

@@ -1,5 +1,4 @@
 export default {
-  useFollowUser: "useFollowUser",
-  useFetchFollow: "useFetchFollow",
-  useUnfollowUser: "useUnfollowUser",
+  overview: "Overview",
+  hook: "useFollowManager Hook",
 };

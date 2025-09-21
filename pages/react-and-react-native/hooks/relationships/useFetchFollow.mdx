@@ -15,7 +15,7 @@ function FollowStatus({ targetUserId }: { targetUserId: string }) {
 
   const handleCheckFollow = async () => {
     try {
-      const { isFollowing } = await fetchFollow({ userId: targetUserId });
+      const isFollowing = await fetchFollow({ userId: targetUserId });
       console.log(
         isFollowing
           ? "You are following this user."

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `useCreateReport` hook allows users to report inappropriate or problematic content. It provides specialized functions to submit reports for comments or entities, with options to specify reasons and additional details.
+The `useCreateReport` hook allows users to report inappropriate or problematic content. It requires a `type` parameter to specify whether you're reporting comments or entities, and returns a specialized function for that type.
 
 
 ## Usage Example
@@ -10,62 +10,70 @@ The `useCreateReport` hook allows users to report inappropriate or problematic c
 ```tsx
 import { useCreateReport } from "@replyke/react-js";
 
-function ReportButton({ targetId, targetType }: { targetId: string; targetType: "Comment" | "Entity" }) {
-  const { createCommentReport, createEntityReport } = useCreateReport();
+function CommentReportButton({ commentId }: { commentId: string }) {
+  const createCommentReport = useCreateReport({ type: "comment" });
 
   const handleReport = async () => {
     try {
-      if (targetType === "Comment") {
-        await createCommentReport({
-          targetId,
-          reason: "spam",
-          details: "This comment contains spam links."
-        });
-      } else {
-        await createEntityReport({
-          targetId,
-          reason: "harassment",
-          details: "This entity contains inappropriate content."
-        });
-      }
+      await createCommentReport({
+        targetId: commentId,
+        reason: "spam",
+        details: "This comment contains spam links."
+      });
 
-      console.log("Report created successfully.");
+      console.log("Comment report created successfully.");
     } catch (error) {
       console.error("Failed to create report:", error.message);
     }
   };
 
-  return <button onClick={handleReport}>Report</button>;
+  return <button onClick={handleReport}>Report Comment</button>;
+}
+
+function EntityReportButton({ entityId }: { entityId: string }) {
+  const createEntityReport = useCreateReport({ type: "entity" });
+
+  const handleReport = async () => {
+    try {
+      await createEntityReport({
+        targetId: entityId,
+        reason: "harassment",
+        details: "This entity contains inappropriate content."
+      });
+
+      console.log("Entity report created successfully.");
+    } catch (error) {
+      console.error("Failed to create report:", error.message);
+    }
+  };
+
+  return <button onClick={handleReport}>Report Entity</button>;
 }
 ```
 
 ## Parameters & Returns
 
-### Parameters
+### Hook Parameters
 
-The hook provides two functions with the following parameters:
+The hook accepts an object with the following field:
 
-#### `createCommentReport`
-
-| Parameter    | Type            | Required | Description                                   |
-|--------------|-----------------|----------|-----------------------------------------------|
-| `targetId`   | `string`        | Yes      | The ID of the comment to report.              |
-| `reason`     | `ReportReasonKey` | Yes    | The reason for reporting the comment.         |
-| `details`    | `string`        | No       | Additional details about the report.          |
-
-#### `createEntityReport`
-
-| Parameter    | Type            | Required | Description                                   |
-|--------------|-----------------|----------|-----------------------------------------------|
-| `targetId`   | `string`        | Yes      | The ID of the entity to report.               |
-| `reason`     | `ReportReasonKey` | Yes    | The reason for reporting the entity.          |
-| `details`    | `string`        | No       | Additional details about the report.          |
+| Parameter | Type                    | Required | Description                                      |
+|-----------|-------------------------|----------|--------------------------------------------------|
+| `type`    | `"comment" \| "entity"` | Yes      | Specifies whether to report comments or entities. |
 
 ### Returns
 
-The hook provides the following functions:
+The hook returns a single function based on the type specified:
 
-| Function                | Description                                                   |
-|-------------------------|---------------------------------------------------------------|
-| `submitCommentReport`   | Submits a report for a comment.                               |
-| `submitEntityReport`    | Submits a report for an entity.                               |
+- **For `type: "comment"`**: Returns `createCommentReport` function
+- **For `type: "entity"`**: Returns `createEntityReport` function
+
+### Function Parameters
+
+Both returned functions accept the same parameters:
+
+| Parameter    | Type              | Required | Description                                   |
+|--------------|-------------------|----------|-----------------------------------------------|
+| `targetId`   | `string`          | Yes      | The ID of the comment or entity to report.    |
+| `reason`     | `ReportReasonKey` | Yes      | The reason for reporting the content.         |
+| `details`    | `string`          | No       | Additional details about the report.          |
