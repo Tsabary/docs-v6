@@ -12,5 +12,5 @@ export default {
   useDeleteComment: "useDeleteComment",
   useCommentSectionData: "useCommentSectionData",
   useEntityComments: "useEntityComments",
-  useProfileComments: "useProfileCommentsData",
+  useProfileComments: "useProfileComments",
 };
