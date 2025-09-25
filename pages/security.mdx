@@ -158,23 +158,23 @@ export default async (req: ExReq, res: ExRes) => {
 
     // Step 2: Add your event-specific validation logic here
     switch (type) {
-      case "userCreated":
+      case "user.created":
         console.log("Project ID:", projectId, "User data:", data);
         break;
 
-      case "userUpdated":
+      case "user.updated":
         console.log("Project ID:", projectId, "User update data:", data);
         break;
 
-      case "entityCreated":
+      case "entity.created":
         console.log("Project ID:", projectId, "Entity data:", data);
         break;
 
-      case "entityUpdated":
+      case "entity.updated":
         console.log("Project ID:", projectId, "Entity update data:", data);
         break;
 
-      case "notificationCreated":
+      case "notification.created":
         console.log("Project ID:", projectId, "Notification data:", data);
         break;
     }
