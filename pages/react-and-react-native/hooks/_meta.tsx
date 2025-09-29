@@ -1,7 +1,8 @@
 export default {
   crypto: "Cryptography",
   users: "Users",
-  relationships: "User Relationships",
+  connections: "Connections",
+  follows: "Follows",
   entities: "Entities",
   comments: "Comments",
   moderation: "Moderation",
