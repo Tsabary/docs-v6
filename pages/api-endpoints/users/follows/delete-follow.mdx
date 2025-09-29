@@ -2,7 +2,7 @@
 
 ## Endpoint
 
-**URL:** `/:projectId/users/:userId/follow`
+**URL:** `api.replyke.com/api/v6/:projectId/users/:userId/follow`
 
 **Method:** `DELETE`
 
@@ -37,7 +37,7 @@ _None_
 #### Example Request
 
 ```http
-DELETE /proj1234/users/abcd123/follow
+DELETE /users/user-uuid-123/follow
 Authorization: Bearer <ACCESS_TOKEN>
 ```
 
@@ -53,12 +53,30 @@ Authorization: Bearer <ACCESS_TOKEN>
 
 ### Error Responses
 
-#### Follow Not Found (404 Not Found)
+#### Invalid User ID (400 Bad Request)
 
 ```json
 {
-  "error": "Follow relationship does not exist.",
-  "code": "follow/not-found"
+  "error": "Invalid userId",
+  "code": "follow/invalid-user-id"
+}
+```
+
+#### Self-Unfollow Attempt (400 Bad Request)
+
+```json
+{
+  "error": "Cannot unfollow yourself",
+  "code": "follow/self-follow"
+}
+```
+
+#### Not Following (404 Not Found)
+
+```json
+{
+  "error": "Not currently following this user",
+  "code": "follow/not-following"
 }
 ```
 
@@ -66,9 +84,8 @@ Authorization: Bearer <ACCESS_TOKEN>
 
 ```json
 {
-  "error": "Internal server error.",
-  "code": "follow/server-error",
-  "details": "<Error message>"
+  "error": "Internal server error",
+  "code": "follow/server-error"
 }
 ```
 
@@ -76,6 +93,8 @@ Authorization: Bearer <ACCESS_TOKEN>
 
 ## Notes
 
-- Requires authentication.
-- Returns `204 No Content` on successful deletion.
-- Returns `404` if no follow relationship was found.
+- Removes the follow relationship between the authenticated user and the specified user
+- Returns 204 No Content on successful unfollow with no response body
+- Cannot unfollow yourself
+- Returns 404 if no follow relationship exists
+- Rate limiting: 75 requests per 5 minutes
